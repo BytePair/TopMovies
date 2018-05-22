@@ -5,5 +5,6 @@
     <string name="most_popular">Most Popular</string>
     <string name="top_rated">Top Rated</string>
     <string name="sort_by">Sort By</string>
+    <string name="movie_poster">movie poster</string>
 
 </resources>

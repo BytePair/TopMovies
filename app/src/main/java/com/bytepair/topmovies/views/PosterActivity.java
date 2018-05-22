@@ -3,17 +3,23 @@ package com.bytepair.topmovies.views;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.bytepair.topmovies.R;
-import com.bytepair.topmovies.models.Movie;
+import com.bytepair.topmovies.adapters.MoviesAdapter;
 import com.bytepair.topmovies.presenters.MoviesPresenter;
 import com.bytepair.topmovies.views.interfaces.MoviesView;
 
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class PosterActivity extends AppCompatActivity implements MoviesView {
 
@@ -23,17 +29,33 @@ public class PosterActivity extends AppCompatActivity implements MoviesView {
     private static final String MOST_POPULAR = "most_popular";
     private static final String HIGHEST_RATED = "highest_rated";
 
-    private MoviesPresenter presenter;
+    private MoviesPresenter moviesPresenter;
+    private MoviesAdapter moviesAdapter;
+
+    @BindView(R.id.movies_recycler_view)
+    RecyclerView moviesRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_poster);
 
+        // set default sort order if none set already
         setDefaultSettings();
 
-        presenter = new MoviesPresenter(this);
-        presenter.getMovies(this);
+        // bind views using ButterKnife
+        ButterKnife.bind(this);
+
+        // obtain a reference to the recycler view and set hasFixedSize to improve performance
+        moviesRecyclerView.setHasFixedSize(true);
+
+        // connect to a layout manager
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        moviesRecyclerView.setLayoutManager(gridLayoutManager);
+
+        // define a presenter and fetch movies
+        moviesPresenter = new MoviesPresenter(this);
+        moviesPresenter.fetchMovies(this);
     }
 
     @Override
@@ -45,7 +67,6 @@ public class PosterActivity extends AppCompatActivity implements MoviesView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.menu_most_popular:
                 saveSortingSetting(MOST_POPULAR);
@@ -53,12 +74,13 @@ public class PosterActivity extends AppCompatActivity implements MoviesView {
             case R.id.menu_top_rated:
                 saveSortingSetting(HIGHEST_RATED);
                 break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
         Log.i(TAG, "Sorting preference changed to " + getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).getString(SORT_BY, null));
-
-        presenter.getMovies(this);
-        return super.onOptionsItemSelected(item);
+        moviesPresenter.fetchMovies(this);
+        return true;
     }
 
     private void setDefaultSettings() {
@@ -74,14 +96,14 @@ public class PosterActivity extends AppCompatActivity implements MoviesView {
     }
 
     @Override
-    public void displayMovies(List<Movie> movies) {
-        // TODO: Show the returned movies
-        if (movies == null) {
-            return;
-        }
-        for (Movie movie : movies) {
-            Log.i(TAG, movie.getTitle() + " " + movie.getPopularity());
-        }
+    public void getMoviesSuccess() {
+        moviesAdapter = new MoviesAdapter(moviesPresenter.getMovies());
+        moviesRecyclerView.setAdapter(moviesAdapter);
+    }
+
+    @Override
+    public void getMoviesFail() {
+        Toast.makeText(this, "Failed to load movies", Toast.LENGTH_SHORT).show();
     }
 
 }
