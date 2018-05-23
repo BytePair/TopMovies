@@ -6,10 +6,8 @@ import android.support.annotation.NonNull;
 import com.bytepair.topmovies.BuildConfig;
 import com.bytepair.topmovies.models.Movie;
 import com.bytepair.topmovies.models.MovieResults;
-import com.bytepair.topmovies.services.MovieService;
+import com.bytepair.topmovies.models.services.MovieService;
 import com.bytepair.topmovies.views.interfaces.MoviesView;
-
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,7 +18,6 @@ import retrofit2.Response;
 
 public class MoviesPresenter {
 
-    private static final String TAG = MoviesPresenter.class.getSimpleName();
     private static final String MOVIES_PREFERENCES = "movies_preferences";
     private static final String SORT_BY = "sort_by";
     private static final String MOST_POPULAR = "most_popular";
@@ -31,6 +28,10 @@ public class MoviesPresenter {
 
     public MoviesPresenter(MoviesView moviesView) {
         mMoviesView = moviesView;
+    }
+
+    public List<Movie> getMovies() {
+        return mMovies;
     }
 
     public void fetchMovies(Context context) {
@@ -57,13 +58,13 @@ public class MoviesPresenter {
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
                 if (response.isSuccessful()) {
                     mMovies = Objects.requireNonNull(response.body()).getResults();
-                    if (CollectionUtils.isNotEmpty(mMovies)) {
+                    if (mMovies.size() > 0) {
                         mMoviesView.loadMoviesSuccess();
                     } else {
-                        onFailure(call, new Throwable("Movies list is empty or null"));
+                        onFailure(call, new Throwable("No movies found"));
                     }
                 } else {
-                    onFailure(call, new Throwable("Fail Response: " +  response.code()));
+                    onFailure(call, new Throwable("Fail response code: " +  response.code()));
                 }
             }
 
@@ -75,7 +76,5 @@ public class MoviesPresenter {
         });
     }
 
-    public List<Movie> getMovies() {
-        return mMovies;
-    }
+    // TODO: Request different page of movies
 }

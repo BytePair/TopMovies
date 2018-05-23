@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.bytepair.topmovies.R;
-import com.bytepair.topmovies.adapters.MoviesAdapter;
+import com.bytepair.topmovies.views.adapters.MoviesAdapter;
 import com.bytepair.topmovies.models.Movie;
 import com.bytepair.topmovies.presenters.MoviesPresenter;
 import com.bytepair.topmovies.views.interfaces.MoviesView;

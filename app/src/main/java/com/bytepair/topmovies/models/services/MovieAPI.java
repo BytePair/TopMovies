@@ -1,4 +1,4 @@
-package com.bytepair.topmovies.services;
+package com.bytepair.topmovies.models.services;
 
 import com.bytepair.topmovies.models.DetailedMovie;
 import com.bytepair.topmovies.models.MovieResults;

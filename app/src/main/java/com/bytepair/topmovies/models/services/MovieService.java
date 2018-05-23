@@ -1,4 +1,4 @@
-package com.bytepair.topmovies.services;
+package com.bytepair.topmovies.models.services;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
