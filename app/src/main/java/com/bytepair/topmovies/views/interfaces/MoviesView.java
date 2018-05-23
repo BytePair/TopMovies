@@ -2,8 +2,10 @@ package com.bytepair.topmovies.views.interfaces;
 
 public interface MoviesView {
 
-    void getMoviesSuccess();
+    void loadMoviesSuccess();
 
-    void getMoviesFail();
+    void loadMoviesFailure();
+
+    void loadMoviesInProgress();
 
 }

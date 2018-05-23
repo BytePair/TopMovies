@@ -6,5 +6,7 @@
     <string name="top_rated">Top Rated</string>
     <string name="sort_by">Sort By</string>
     <string name="movie_poster">movie poster</string>
+    <string name="movie_failed_to_load">Movie failed to load.</string>
+    <string name="sorry">Sorry : (</string>
 
 </resources>

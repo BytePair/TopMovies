@@ -19,9 +19,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
 
     private List<Movie> mMovies;
 
+    // pass instance of a class that implements the click handler in the constructor
+    // and store it for use when an item in the list is clicked
+    private final MovieAdapterOnClickHandler mMovieAdapterOnClickHandler;
+
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MoviesAdapter(List<Movie> movies) {
+    public MoviesAdapter(MovieAdapterOnClickHandler clickHandler, List<Movie> movies) {
         mMovies = movies;
+        mMovieAdapterOnClickHandler = clickHandler;
+    }
+
+    // Interface that receives the onClick
+    public interface MovieAdapterOnClickHandler {
+        void onClick(Movie movie);
     }
 
     // Create new views (invoked by the layout manager)
@@ -55,7 +65,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    static class MoviesViewHolder extends RecyclerView.ViewHolder {
+    class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         // TODO: Add more data fields
         private ImageView mImageView;
@@ -63,6 +73,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         MoviesViewHolder(View view) {
             super(view);
             mImageView = view.findViewById(R.id.movie_poster_image_view);
+            view.setOnClickListener(this);
         }
 
         // bind the data to the views
@@ -71,6 +82,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
                     .load("http://image.tmdb.org/t/p/w342/" + movie.getPosterPath())
                     .error(R.drawable.ic_not_found_placeholder)
                     .into(mImageView);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mMovieAdapterOnClickHandler.onClick(mMovies.get(getAdapterPosition()));
         }
     }
 }

@@ -2,7 +2,6 @@ package com.bytepair.topmovies.presenters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import com.bytepair.topmovies.BuildConfig;
 import com.bytepair.topmovies.models.Movie;
@@ -35,42 +34,43 @@ public class MoviesPresenter {
     }
 
     public void fetchMovies(Context context) {
+        mMoviesView.loadMoviesInProgress();
         String sortSetting = context.getSharedPreferences(MOVIES_PREFERENCES, Context.MODE_PRIVATE).getString(SORT_BY, null);
         if (sortSetting == null) {
             return;
         }
         switch (sortSetting) {
             case MOST_POPULAR:
-                enqueueCallback(context, MovieService.getAPI().getPopularMovies(BuildConfig.MOVIE_API_KEY));
+                enqueueCallback(MovieService.getAPI().getPopularMovies(BuildConfig.MOVIE_API_KEY));
                 break;
             case HIGHEST_RATED:
-                enqueueCallback(context, MovieService.getAPI().getTopRatedMovies(BuildConfig.MOVIE_API_KEY));
+                enqueueCallback(MovieService.getAPI().getTopRatedMovies(BuildConfig.MOVIE_API_KEY));
                 break;
             default:
                 break;
         }
     }
 
-    private void enqueueCallback(final Context context, Call<MovieResults> movieResults) {
+    private void enqueueCallback(Call<MovieResults> movieResults) {
         movieResults.enqueue(new Callback<MovieResults>() {
             @Override
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
                 if (response.isSuccessful()) {
                     mMovies = Objects.requireNonNull(response.body()).getResults();
                     if (CollectionUtils.isNotEmpty(mMovies)) {
-                        mMoviesView.getMoviesSuccess();
+                        mMoviesView.loadMoviesSuccess();
                     } else {
                         onFailure(call, new Throwable("Movies list is empty or null"));
                     }
                 } else {
-                    Toast.makeText(context, "Error loading movies, please try again later", Toast.LENGTH_SHORT).show();
+                    onFailure(call, new Throwable("Fail Response: " +  response.code()));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
-                mMoviesView.getMoviesFail();
                 t.printStackTrace();
+                mMoviesView.loadMoviesFailure();
             }
         });
     }
