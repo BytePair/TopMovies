@@ -59,7 +59,7 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
         moviesRecyclerView.setHasFixedSize(true);
 
         // connect to a layout manager
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         moviesRecyclerView.setLayoutManager(gridLayoutManager);
 
         // define a presenter and fetch movies

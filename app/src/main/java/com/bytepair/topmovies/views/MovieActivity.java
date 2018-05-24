@@ -65,12 +65,11 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         String movieID = intent.getStringExtra(PostersActivity.MOVIE_ID);
-        Toast.makeText(this, "Movie ID: " + movieID, Toast.LENGTH_SHORT).show();
 
         mImdbConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // TODO: Create link and intent for IMDB
             }
         });
 
@@ -106,6 +105,11 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
 
     private void populateMovieDetails(DetailedMovie detailedMovie) {
 
+        Picasso.get()
+                .load("http://image.tmdb.org/t/p/w342/" + detailedMovie.getBackdropPath())
+                .error(R.drawable.movie_backdrop_default)
+                .into(mBackdropImageView);
+
         // get title
         mMovieTitleTextView.setText(detailedMovie.getTitle());
 
@@ -118,11 +122,6 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         // set ratings
         mImdbTextView.setText(String.valueOf(detailedMovie.getVoteAverage()));
         mMovieDbTextView.setText(String.valueOf(detailedMovie.getVoteAverage()));
-
-        Picasso.get()
-                .load("http://image.tmdb.org/t/p/w342/" + detailedMovie.getBackdropPath())
-                .error(R.drawable.movie_backdrop_default)
-                .into(mBackdropImageView);
     }
 
 }

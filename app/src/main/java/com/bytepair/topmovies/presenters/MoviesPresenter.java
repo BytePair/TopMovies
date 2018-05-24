@@ -68,6 +68,7 @@ public class MoviesPresenter {
                 }
             }
 
+
             @Override
             public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {
                 t.printStackTrace();
@@ -76,5 +77,5 @@ public class MoviesPresenter {
         });
     }
 
-    // TODO: Request different page of movies
+    // TODO: Request more movies on scroll
 }

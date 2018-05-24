@@ -29,37 +29,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         mMovieAdapterOnClickHandler = clickHandler;
     }
 
-    // Interface that receives the onClick
-    public interface MovieAdapterOnClickHandler {
-        void onClick(Movie movie);
-    }
-
-    // Create new views (invoked by the layout manager)
-    @NonNull
-    @Override
-    public MoviesAdapter.MoviesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // create a new view
-        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-        return new MoviesViewHolder(view);
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return R.layout.recyclerview_movie;
-    }
-
-    // Replace the contents of a view (invoked by the layout manager)
-    @Override
-    public void onBindViewHolder(@NonNull MoviesViewHolder holder, int position) {
-        // get element from movies at this position
-        // replace the contents of the view with that element
-        holder.bindData(mMovies.get(position));
-    }
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mMovies.size();
+    }
+
+    // Returns the view to be used in onCreateViewHolder
+    @Override
+    public int getItemViewType(int position) {
+        return R.layout.recyclerview_movie;
     }
 
     // Provide a reference to the views for each data item
@@ -67,7 +46,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
     // you provide access to all the views for a data item in a view holder
     class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        // TODO: Add more data fields
         private ImageView mImageView;
 
         MoviesViewHolder(View view) {
@@ -89,4 +67,27 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             mMovieAdapterOnClickHandler.onClick(mMovies.get(getAdapterPosition()));
         }
     }
+
+    // Create new views (invoked by the layout manager)
+    @NonNull
+    @Override
+    public MoviesAdapter.MoviesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // create a new view
+        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+        return new MoviesViewHolder(view);
+    }
+
+    // Replace the contents of a view (invoked by the layout manager)
+    @Override
+    public void onBindViewHolder(@NonNull MoviesViewHolder holder, int position) {
+        // get element from movies at this position
+        // replace the contents of the view with that element
+        holder.bindData(mMovies.get(position));
+    }
+
+    // Interface that receives the onClick
+    public interface MovieAdapterOnClickHandler {
+        void onClick(Movie movie);
+    }
+
 }
