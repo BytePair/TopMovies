@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,10 @@ import com.bytepair.topmovies.presenters.MoviePresenter;
 import com.bytepair.topmovies.views.interfaces.MovieView;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -23,35 +28,32 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
 
     private static final String TAG = MovieActivity.class.getSimpleName();
 
-    @BindView(R.id.movie_progress_bar)
+    @BindView(R.id.movie_activity_movie_pb)
     ProgressBar mProgressBar;
 
-    @BindView(R.id.movie_constraint_layout)
+    @BindView(R.id.movie_activity_success_cl)
     ConstraintLayout mMovieDetailsLayout;
 
-    @BindView(R.id.movie_load_fail_constraint_layout)
+    @BindView(R.id.activity_movie_failure_cl)
     ConstraintLayout mMovieFailedLayout;
 
-    @BindView(R.id.backdrop_image_view)
+    @BindView(R.id.activity_movie_backgroup_iv)
     ImageView mBackdropImageView;
 
-    @BindView(R.id.movie_title_text_view)
+    @BindView(R.id.activity_movie_title_tv)
     TextView mMovieTitleTextView;
 
-    @BindView(R.id.year_text_view)
-    TextView mYearTextView;
-
-    @BindView(R.id.description_text_view)
+    @BindView(R.id.activity_movie_summary_tv)
     TextView mDescriptionTextView;
 
-    @BindView(R.id.movie_db_text_view)
-    TextView mMovieDbTextView;
+    @BindView(R.id.activity_movie_year_tv)
+    TextView mMovieReleaseDate;
 
-    @BindView(R.id.imdb_rating_text_view)
-    TextView mImdbTextView;
+    @BindView(R.id.activity_movie_runtime_tv)
+    TextView mMovieRuntime;
 
-    @BindView(R.id.imdb_constraint_layout)
-    ConstraintLayout mImdbConstraintLayout;
+    @BindView(R.id.activity_movie_rating_rb)
+    RatingBar mMovieRating;
 
     private MoviePresenter moviePresenter;
 
@@ -60,19 +62,15 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
         ButterKnife.bind(this);
 
-        // Get the Intent that started this activity and extract the string
+        // Get the Intent that started this activity and extract the movie id string
         Intent intent = getIntent();
         String movieID = intent.getStringExtra(PostersActivity.MOVIE_ID);
 
-        mImdbConstraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: Create link and intent for IMDB
-            }
-        });
-
+        // Then use that movie id to fetch more movie details from the movie presenter
         moviePresenter = new MoviePresenter(this);
         moviePresenter.fetchMovie(movieID);
     }
@@ -105,23 +103,62 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
 
     private void populateMovieDetails(DetailedMovie detailedMovie) {
 
+        // set backdrop
         Picasso.get()
                 .load("http://image.tmdb.org/t/p/w342/" + detailedMovie.getBackdropPath())
                 .error(R.drawable.movie_backdrop_default)
                 .into(mBackdropImageView);
 
-        // get title
-        mMovieTitleTextView.setText(detailedMovie.getTitle());
+        // set title
+        mMovieTitleTextView.setText(formatMovieTitle(detailedMovie.getTitle()));
 
-        // get release date
-        mYearTextView.setText(detailedMovie.getReleaseDate().substring(0, 4));
+        // set year
+        mMovieReleaseDate.setText(formatMovieYear(detailedMovie.getReleaseDate()));
 
-        // get description
-        mDescriptionTextView.setText("\t\t" + detailedMovie.getOverview());
+        // set description
+        mDescriptionTextView.setText(formatMovieSummary(detailedMovie.getOverview()));
 
-        // set ratings
-        mImdbTextView.setText(String.valueOf(detailedMovie.getVoteAverage()));
-        mMovieDbTextView.setText(String.valueOf(detailedMovie.getVoteAverage()));
+        // set runtime
+        mMovieRuntime.setText(formatMovieRuntime(detailedMovie.getRuntime()));
+
+        // set rating
+        mMovieRating.setRating((float) detailedMovie.getVoteAverage() / 2);
+
+    }
+
+    private String formatMovieTitle(String title) {
+        if (StringUtils.isBlank(title)) {
+            return "No Title Found";
+        }
+        if (title.length() < 25) {
+            return title;
+        }
+        return title.substring(0, 25) + "...";
+    }
+
+    private String formatMovieYear(String date) {
+        if (StringUtils.isBlank(date)) {
+            return "";
+        }
+        return date.substring(0, 4);
+    }
+
+    private String formatMovieSummary(String summary) {
+        if (StringUtils.isBlank(summary)) {
+            return getString(R.string.default_summary);
+        }
+        return "\t\t" + summary;
+    }
+
+    private String formatMovieRuntime(int runtime) {
+        StringBuilder runtimeBuilder = new StringBuilder();
+        int hours;
+        int minutes;
+        hours = runtime / 60;
+        minutes = runtime % 60;
+        if (hours != -1) runtimeBuilder.append(String.valueOf(hours)).append("h ");
+        if (minutes != -1) runtimeBuilder.append(String.valueOf(minutes)).append("m");
+        return runtimeBuilder.toString();
     }
 
 }

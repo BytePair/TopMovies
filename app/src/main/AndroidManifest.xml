@@ -11,14 +11,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".views.PostersActivity">
+        <activity
+            android:name=".views.PostersActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.MovieActivity"></activity>
+        <activity
+            android:name=".views.MovieActivity"
+            android:parentActivityName=".views.PostersActivity">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bytepair.topmovies.views.PostersActivity" />
+        </activity>
     </application>
 
 </manifest>

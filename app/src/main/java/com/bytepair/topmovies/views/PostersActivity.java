@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,13 +34,13 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
     private MoviesPresenter moviesPresenter;
     private MoviesAdapter moviesAdapter;
 
-    @BindView(R.id.movies_recycler_view)
+    @BindView(R.id.activity_poster_rv)
     RecyclerView moviesRecyclerView;
 
-    @BindView(R.id.movies_progress_bar)
+    @BindView(R.id.activity_poster_pb)
     ProgressBar moviesProgressBar;
 
-    @BindView(R.id.movies_load_fail_constraint_layout)
+    @BindView(R.id.activity_poster_failure_cl)
     ConstraintLayout moviesFailureConstraintLayout;
 
     @Override
@@ -87,7 +86,6 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
                 return super.onOptionsItemSelected(item);
         }
 
-        Log.i(TAG, "Sorting preference changed to " + getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).getString(SORT_BY, null));
         moviesPresenter.fetchMovies(this);
         return true;
     }
@@ -130,7 +128,6 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
 
     @Override
     public void onClick(Movie movie) {
-        Log.i(TAG, movie.getTitle());
         Intent intent = new Intent(this, MovieActivity.class);
         intent.putExtra(MOVIE_ID, String.valueOf(movie.getId()));
         startActivity(intent);

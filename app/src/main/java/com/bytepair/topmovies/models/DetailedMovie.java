@@ -1,3 +1,8 @@
+/**
+ * Class generated on
+ * http://www.jsonschema2pojo.org/
+ */
+
 package com.bytepair.topmovies.models;
 
 import java.util.List;
