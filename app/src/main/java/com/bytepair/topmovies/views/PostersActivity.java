@@ -57,12 +57,18 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
         // obtain a reference to the recycler view and set hasFixedSize to improve performance
         moviesRecyclerView.setHasFixedSize(true);
 
-        // connect to a layout manager
+        // initialize the movies presenter (will initially have empty list)
+        moviesPresenter = new MoviesPresenter(this);
+
+        // initialize the movies adapter and connect to recycler view
+        moviesAdapter = new MoviesAdapter(this, moviesPresenter.getMovies());
+        moviesRecyclerView.setAdapter(moviesAdapter);
+
+        // initialize the layout manager and connect to the recycler view
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         moviesRecyclerView.setLayoutManager(gridLayoutManager);
 
-        // define a presenter and fetch movies
-        moviesPresenter = new MoviesPresenter(this);
+        // fetch the first set of movies
         moviesPresenter.fetchMovies(this);
     }
 
@@ -111,8 +117,7 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
 
     @Override
     public void loadMoviesSuccess() {
-        moviesAdapter = new MoviesAdapter(this, moviesPresenter.getMovies());
-        moviesRecyclerView.setAdapter(moviesAdapter);
+        moviesAdapter.updateMovies(moviesPresenter.getMovies());
 
         moviesFailureConstraintLayout.setVisibility(View.INVISIBLE);
         moviesProgressBar.setVisibility(View.INVISIBLE);

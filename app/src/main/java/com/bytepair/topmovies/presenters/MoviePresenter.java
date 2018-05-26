@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.bytepair.topmovies.BuildConfig;
 import com.bytepair.topmovies.models.DetailedMovie;
-import com.bytepair.topmovies.models.services.MovieService;
+import com.bytepair.topmovies.utilities.services.MovieService;
 import com.bytepair.topmovies.views.interfaces.MovieView;
 
 import retrofit2.Call;

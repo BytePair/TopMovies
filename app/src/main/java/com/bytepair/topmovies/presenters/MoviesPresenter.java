@@ -6,9 +6,10 @@ import android.support.annotation.NonNull;
 import com.bytepair.topmovies.BuildConfig;
 import com.bytepair.topmovies.models.Movie;
 import com.bytepair.topmovies.models.MovieResults;
-import com.bytepair.topmovies.models.services.MovieService;
+import com.bytepair.topmovies.utilities.services.MovieService;
 import com.bytepair.topmovies.views.interfaces.MoviesView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,6 +29,7 @@ public class MoviesPresenter {
 
     public MoviesPresenter(MoviesView moviesView) {
         mMoviesView = moviesView;
+        mMovies = new ArrayList<>();
     }
 
     public List<Movie> getMovies() {
@@ -58,16 +60,11 @@ public class MoviesPresenter {
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
                 if (response.isSuccessful()) {
                     mMovies = Objects.requireNonNull(response.body()).getResults();
-                    if (mMovies.size() > 0) {
-                        mMoviesView.loadMoviesSuccess();
-                    } else {
-                        onFailure(call, new Throwable("No movies found"));
-                    }
+                    mMoviesView.loadMoviesSuccess();
                 } else {
                     onFailure(call, new Throwable("Fail response code: " +  response.code()));
                 }
             }
-
 
             @Override
             public void onFailure(@NonNull Call<MovieResults> call, @NonNull Throwable t) {

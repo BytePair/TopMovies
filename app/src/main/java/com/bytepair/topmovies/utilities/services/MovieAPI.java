@@ -1,4 +1,9 @@
-package com.bytepair.topmovies.models.services;
+/**
+ * Helpful guide for creating and using singleton for Retrofit
+ * https://code.tutsplus.com/tutorials/getting-started-with-retrofit-2--cms-27792
+ */
+
+package com.bytepair.topmovies.utilities.services;
 
 import com.bytepair.topmovies.models.DetailedMovie;
 import com.bytepair.topmovies.models.MovieResults;
