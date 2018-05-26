@@ -7,17 +7,18 @@ public class MovieService {
 
     private static final String BASE_URL = "http://api.themoviedb.org/";
 
-    private static Retrofit retrofit = null;
+    private static MovieAPI movieAPI = null;
 
     public static MovieAPI getAPI() {
-        if (retrofit == null) {
-            retrofit = new Retrofit
+        if (movieAPI == null) {
+            Retrofit retrofit = new Retrofit
                     .Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
+            movieAPI = retrofit.create(MovieAPI.class);
         }
-        return retrofit.create(MovieAPI.class);
+        return movieAPI;
     }
 
 }
