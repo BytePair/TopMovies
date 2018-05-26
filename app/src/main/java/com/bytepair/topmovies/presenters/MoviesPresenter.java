@@ -36,7 +36,9 @@ public class MoviesPresenter {
         return mMovies;
     }
 
-    public void fetchMovies(Context context) {
+    public void initializeMovies(Context context) {
+        mMovies = new ArrayList<>();
+
         mMoviesView.loadMoviesInProgress();
         String sortSetting = context.getSharedPreferences(MOVIES_PREFERENCES, Context.MODE_PRIVATE).getString(SORT_BY, null);
         if (sortSetting == null) {

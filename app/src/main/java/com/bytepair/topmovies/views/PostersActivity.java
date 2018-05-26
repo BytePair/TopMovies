@@ -19,6 +19,8 @@ import com.bytepair.topmovies.models.Movie;
 import com.bytepair.topmovies.presenters.MoviesPresenter;
 import com.bytepair.topmovies.views.interfaces.MoviesView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -69,7 +71,7 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
         moviesRecyclerView.setLayoutManager(gridLayoutManager);
 
         // fetch the first set of movies
-        moviesPresenter.fetchMovies(this);
+        moviesPresenter.initializeMovies(this);
     }
 
     @Override
@@ -91,8 +93,6 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-        moviesPresenter.fetchMovies(this);
         return true;
     }
 
@@ -103,9 +103,15 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
     }
 
     private void saveSortingSetting(String sortingSetting) {
-        SharedPreferences.Editor spEditor = getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).edit();
-        spEditor.putString(SORT_BY, sortingSetting);
-        spEditor.apply();
+        // if sort setting changes, change the setting, and reset the movies list
+        if (!sortingSetting.equals(getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).getString(SORT_BY, null))) {
+            SharedPreferences.Editor spEditor = getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).edit();
+            spEditor.putString(SORT_BY, sortingSetting);
+            spEditor.apply();
+
+            moviesAdapter.updateMovies(new ArrayList<Movie>());
+            moviesPresenter.initializeMovies(this);
+        }
     }
 
     @Override
@@ -137,4 +143,5 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
         intent.putExtra(MOVIE_ID, String.valueOf(movie.getId()));
         startActivity(intent);
     }
+
 }
