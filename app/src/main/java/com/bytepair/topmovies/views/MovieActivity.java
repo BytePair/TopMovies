@@ -156,7 +156,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         int minutes;
         hours = runtime / 60;
         minutes = runtime % 60;
-        if (hours != -1) runtimeBuilder.append(String.valueOf(hours)).append("h ");
+        if (hours > 0) runtimeBuilder.append(String.valueOf(hours)).append("h ");
         if (minutes != -1) runtimeBuilder.append(String.valueOf(minutes)).append("m");
         return runtimeBuilder.toString();
     }

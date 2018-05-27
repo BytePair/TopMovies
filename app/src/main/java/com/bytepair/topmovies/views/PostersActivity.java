@@ -18,6 +18,7 @@ import com.bytepair.topmovies.views.adapters.MoviesAdapter;
 import com.bytepair.topmovies.models.Movie;
 import com.bytepair.topmovies.presenters.MoviesPresenter;
 import com.bytepair.topmovies.views.interfaces.MoviesView;
+import com.bytepair.topmovies.views.listeners.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
 
     private MoviesPresenter moviesPresenter;
     private MoviesAdapter moviesAdapter;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @BindView(R.id.activity_poster_rv)
     RecyclerView moviesRecyclerView;
@@ -69,6 +71,10 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
         // initialize the layout manager and connect to the recycler view
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         moviesRecyclerView.setLayoutManager(gridLayoutManager);
+
+        // add scroll listener to recycler view for endless scrolling
+        setupScrollListener(gridLayoutManager);
+        moviesRecyclerView.addOnScrollListener(scrollListener);
 
         // fetch the first set of movies
         moviesPresenter.initializeMovies(this);
@@ -110,6 +116,7 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
             spEditor.apply();
 
             moviesAdapter.updateMovies(new ArrayList<Movie>());
+            scrollListener.resetState();
             moviesPresenter.initializeMovies(this);
         }
     }
@@ -144,4 +151,15 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
         startActivity(intent);
     }
 
+    private void setupScrollListener(GridLayoutManager layoutManager) {
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                moviesPresenter.loadMoreMovies(getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).getString(SORT_BY, null), page);
+            }
+        };
+    }
 }
