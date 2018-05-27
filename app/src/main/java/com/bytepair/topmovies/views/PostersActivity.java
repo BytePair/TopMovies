@@ -50,14 +50,8 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posters);
 
-        // set default sort order if none set already
-        setDefaultSettings();
-
         // bind views using ButterKnife
         ButterKnife.bind(this);
-
-        // obtain a reference to the recycler view and set hasFixedSize to improve performance
-        moviesRecyclerView.setHasFixedSize(true);
 
         // initialize the movies presenter (will initially have empty list)
         moviesPresenter = new MoviesPresenter(this);
@@ -69,6 +63,12 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
         // initialize the layout manager and connect to the recycler view
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         moviesRecyclerView.setLayoutManager(gridLayoutManager);
+
+        // obtain a reference to the recycler view and set hasFixedSize to improve performance
+        moviesRecyclerView.setHasFixedSize(true);
+
+        // set default sort order if none set already
+        setDefaultSettings();
 
         // fetch the first set of movies
         moviesPresenter.initializeMovies(this);
@@ -93,6 +93,8 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
             default:
                 return super.onOptionsItemSelected(item);
         }
+        moviesAdapter.updateMovies(new ArrayList<Movie>());
+        moviesPresenter.initializeMovies(this);
         return true;
     }
 
@@ -103,15 +105,9 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
     }
 
     private void saveSortingSetting(String sortingSetting) {
-        // if sort setting changes, change the setting, and reset the movies list
-        if (!sortingSetting.equals(getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).getString(SORT_BY, null))) {
-            SharedPreferences.Editor spEditor = getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).edit();
-            spEditor.putString(SORT_BY, sortingSetting);
-            spEditor.apply();
-
-            moviesAdapter.updateMovies(new ArrayList<Movie>());
-            moviesPresenter.initializeMovies(this);
-        }
+        SharedPreferences.Editor spEditor = getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).edit();
+        spEditor.putString(SORT_BY, sortingSetting);
+        spEditor.apply();
     }
 
     @Override

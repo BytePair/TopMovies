@@ -7,6 +7,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/activity_movie_failure_cl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone">
+
+        <TextView
+            android:id="@+id/activity_poster_fail_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="184dp"
+            android:text="@string/sorry"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/activity_movie_fail_desc_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/movie_failed_to_load"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_poster_fail_title_tv" />
+
+    </android.support.constraint.ConstraintLayout>
+
     <ProgressBar
         android:id="@+id/movie_activity_movie_pb"
         style="?android:attr/progressBarStyle"
@@ -141,37 +172,6 @@
 
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
-
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/activity_movie_failure_cl"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:visibility="gone">
-
-        <TextView
-            android:id="@+id/activity_poster_fail_title_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="184dp"
-            android:text="@string/sorry"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/activity_movie_fail_desc_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/movie_failed_to_load"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/activity_poster_fail_title_tv" />
 
     </android.support.constraint.ConstraintLayout>
 
