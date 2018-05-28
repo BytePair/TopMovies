@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bytepair.topmovies.R;
 import com.bytepair.topmovies.views.adapters.MoviesAdapter;
@@ -44,22 +45,19 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
     @BindView(R.id.activity_poster_pb)
     ProgressBar moviesProgressBar;
 
-    @BindView(R.id.activity_poster_failure_cl)
+    @BindView(R.id.activity_movie_failure_cl)
     ConstraintLayout moviesFailureConstraintLayout;
+
+    @BindView(R.id.full_screen_error_desc_tv)
+    TextView mErrorTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posters);
 
-        // set default sort order if none set already
-        setDefaultSettings();
-
         // bind views using ButterKnife
         ButterKnife.bind(this);
-
-        // obtain a reference to the recycler view and set hasFixedSize to improve performance
-        moviesRecyclerView.setHasFixedSize(true);
 
         // initialize the movies presenter (will initially have empty list)
         moviesPresenter = new MoviesPresenter(this);
@@ -71,10 +69,16 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
         // initialize the layout manager and connect to the recycler view
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         moviesRecyclerView.setLayoutManager(gridLayoutManager);
-
+      
+        // set hasFixedSize to improve performance
+        moviesRecyclerView.setHasFixedSize(true);
+      
         // add scroll listener to recycler view for endless scrolling
         setupScrollListener(gridLayoutManager);
         moviesRecyclerView.addOnScrollListener(scrollListener);
+
+        // set default sort order if none set already
+        setDefaultSettings();
 
         // fetch the first set of movies
         moviesPresenter.initializeMovies(this);
@@ -99,6 +103,8 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
             default:
                 return super.onOptionsItemSelected(item);
         }
+        moviesAdapter.updateMovies(new ArrayList<Movie>());
+        moviesPresenter.initializeMovies(this);
         return true;
     }
 
@@ -109,16 +115,9 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
     }
 
     private void saveSortingSetting(String sortingSetting) {
-        // if sort setting changes, change the setting, and reset the movies list
-        if (!sortingSetting.equals(getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).getString(SORT_BY, null))) {
-            SharedPreferences.Editor spEditor = getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).edit();
-            spEditor.putString(SORT_BY, sortingSetting);
-            spEditor.apply();
-
-            moviesAdapter.updateMovies(new ArrayList<Movie>());
-            scrollListener.resetState();
-            moviesPresenter.initializeMovies(this);
-        }
+        SharedPreferences.Editor spEditor = getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).edit();
+        spEditor.putString(SORT_BY, sortingSetting);
+        spEditor.apply();
     }
 
     @Override
@@ -141,6 +140,7 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
     public void loadMoviesFailure() {
         moviesRecyclerView.setVisibility(View.INVISIBLE);
         moviesProgressBar.setVisibility(View.INVISIBLE);
+        mErrorTextView.setText(R.string.movies_failed_to_load);
         moviesFailureConstraintLayout.setVisibility(View.VISIBLE);
     }
 
