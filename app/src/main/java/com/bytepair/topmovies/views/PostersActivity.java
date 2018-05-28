@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bytepair.topmovies.R;
 import com.bytepair.topmovies.views.adapters.MoviesAdapter;
@@ -42,8 +43,11 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
     @BindView(R.id.activity_poster_pb)
     ProgressBar moviesProgressBar;
 
-    @BindView(R.id.activity_poster_failure_cl)
+    @BindView(R.id.activity_movie_failure_cl)
     ConstraintLayout moviesFailureConstraintLayout;
+
+    @BindView(R.id.full_screen_error_desc_tv)
+    TextView mErrorTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +134,7 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
     public void loadMoviesFailure() {
         moviesRecyclerView.setVisibility(View.INVISIBLE);
         moviesProgressBar.setVisibility(View.INVISIBLE);
+        mErrorTextView.setText(R.string.movies_failed_to_load);
         moviesFailureConstraintLayout.setVisibility(View.VISIBLE);
     }
 

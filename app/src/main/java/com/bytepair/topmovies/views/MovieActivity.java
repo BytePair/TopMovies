@@ -55,6 +55,9 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     @BindView(R.id.activity_movie_rating_rb)
     RatingBar mMovieRating;
 
+    @BindView(R.id.full_screen_error_desc_tv)
+    TextView mErrorTextView;
+
     private MoviePresenter moviePresenter;
 
     @Override
@@ -95,6 +98,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     public void loadMovieFailure() {
         mProgressBar.setVisibility(View.INVISIBLE);
         mMovieDetailsLayout.setVisibility(View.INVISIBLE);
+        mErrorTextView.setText(R.string.movie_failed_to_load);
         mMovieFailedLayout.setVisibility(View.VISIBLE);
 
         Toast.makeText(this, "Sorry, could not load movie", Toast.LENGTH_SHORT).show();

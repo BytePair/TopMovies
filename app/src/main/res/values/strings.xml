@@ -9,6 +9,7 @@
 
     <!-- Error Page -->
     <string name="sorry">Sorry : (</string>
+    <string name="generic_load_error">Content failed to load.</string>
     <string name="movie_failed_to_load">Movie failed to load.</string>
     <string name="movies_failed_to_load">Movies failed to load.</string>
 
