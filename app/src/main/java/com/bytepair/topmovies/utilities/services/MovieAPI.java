@@ -16,10 +16,10 @@ import retrofit2.http.Query;
 public interface MovieAPI {
 
     @GET("/3/movie/popular")
-    Call<MovieResults> getPopularMovies(@Query("api_key") String apiKey);
+    Call<MovieResults> getPopularMovies(@Query("api_key") String apiKey, @Query("page") int page);
 
     @GET("/3/movie/top_rated")
-    Call<MovieResults> getTopRatedMovies(@Query("api_key") String apiKey);
+    Call<MovieResults> getTopRatedMovies(@Query("api_key") String apiKey, @Query("page") int page);
 
     @GET("/3/movie/{movie_id}")
     Call<DetailedMovie> getMovieDetails(@Path("movie_id") String movieID, @Query("api_key") String apiKey);

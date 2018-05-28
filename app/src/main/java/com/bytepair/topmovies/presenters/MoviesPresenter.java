@@ -38,22 +38,34 @@ public class MoviesPresenter {
 
     public void initializeMovies(Context context) {
         mMovies = new ArrayList<>();
-
         mMoviesView.loadMoviesInProgress();
+
         String sortSetting = context.getSharedPreferences(MOVIES_PREFERENCES, Context.MODE_PRIVATE).getString(SORT_BY, null);
         if (sortSetting == null) {
             return;
         }
+
+        loadMoreMovies(sortSetting, 1);
+    }
+
+    // TODO: Request more movies on scroll
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadMoreMovies(String sortSetting, int page) {
+        // Send an API request to retrieve appropriate paginated data
         switch (sortSetting) {
             case MOST_POPULAR:
-                enqueueCallback(MovieService.getAPI().getPopularMovies(BuildConfig.MOVIE_API_KEY));
+                enqueueCallback(MovieService.getAPI().getPopularMovies(BuildConfig.MOVIE_API_KEY, page));
                 break;
             case HIGHEST_RATED:
-                enqueueCallback(MovieService.getAPI().getTopRatedMovies(BuildConfig.MOVIE_API_KEY));
+                enqueueCallback(MovieService.getAPI().getTopRatedMovies(BuildConfig.MOVIE_API_KEY, page));
                 break;
             default:
                 break;
         }
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
     }
 
     private void enqueueCallback(Call<MovieResults> movieResults) {
@@ -61,7 +73,7 @@ public class MoviesPresenter {
             @Override
             public void onResponse(@NonNull Call<MovieResults> call, @NonNull Response<MovieResults> response) {
                 if (response.isSuccessful()) {
-                    mMovies = Objects.requireNonNull(response.body()).getResults();
+                    mMovies.addAll(Objects.requireNonNull(response.body()).getResults());
                     mMoviesView.loadMoviesSuccess();
                 } else {
                     onFailure(call, new Throwable("Fail response code: " +  response.code()));
@@ -76,5 +88,4 @@ public class MoviesPresenter {
         });
     }
 
-    // TODO: Request more movies on scroll
 }

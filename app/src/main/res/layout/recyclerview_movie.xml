@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="0dp"
+        android:padding="0dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/content_desc_movie_poster"
-        android:padding="0dp"
         android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
