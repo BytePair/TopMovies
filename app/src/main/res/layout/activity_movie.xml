@@ -7,7 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/full_screen_error" />
+    <include
+        layout="@layout/full_screen_error"
+        tools:visibility="invisible" />
 
     <ProgressBar
         android:id="@+id/movie_activity_movie_pb"

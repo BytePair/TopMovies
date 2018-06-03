@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -69,6 +70,8 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
 
         ButterKnife.bind(this);
 
+        getSupportActionBar().setTitle("");
+
         // Get the Intent that started this activity and extract the movie id string
         Intent intent = getIntent();
         String movieID = intent.getStringExtra(PostersActivity.MOVIE_ID);
@@ -76,6 +79,12 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         // Then use that movie id to fetch more movie details from the movie presenter
         moviePresenter = new MoviePresenter(this);
         moviePresenter.fetchMovie(movieID);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_movie_details, menu);
+        return true;
     }
 
     @Override
