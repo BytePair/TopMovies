@@ -130,10 +130,29 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
     @Override
     public void loadMoviesSuccess() {
         moviesAdapter.updateMovies(moviesPresenter.getMovies());
+        setToolBarTitle();
 
         moviesFailureConstraintLayout.setVisibility(View.INVISIBLE);
         moviesProgressBar.setVisibility(View.INVISIBLE);
         moviesRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void setToolBarTitle() {
+        if (getSupportActionBar() != null) {
+            String setting = getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).getString(SORT_BY,  null);
+            if (setting != null) {
+                switch (setting) {
+                    case MOST_POPULAR:
+                        getSupportActionBar().setTitle(R.string.most_popular);
+                        break;
+                    case HIGHEST_RATED:
+                        getSupportActionBar().setTitle(R.string.top_rated);
+                        break;
+                    default:
+                        getSupportActionBar().setTitle(R.string.app_name);
+                }
+            }
+        }
     }
 
     @Override

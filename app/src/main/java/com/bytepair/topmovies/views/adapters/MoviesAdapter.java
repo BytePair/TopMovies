@@ -94,5 +94,4 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
         void onClick(Movie movie);
     }
 
-    // TODO: Request more movies on scroll
 }

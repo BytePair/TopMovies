@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/vertical_padding_small"
+    android:layout_marginLeft="@dimen/horizontal_padding"
+    android:layout_marginRight="@dimen/horizontal_padding"
+    android:layout_marginTop="@dimen/vertical_padding_small"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:id="@+id/video_cv_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/video_thumbnail_iv"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/movie_backdrop_default" />
+
+        <TextView
+            android:id="@+id/video_desc_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/video_thumbnail_iv"
+            android:padding="@dimen/horizontal_padding_small"
+            android:text="Video thing 1" />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

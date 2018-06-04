@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,6 +29,8 @@ import butterknife.ButterKnife;
 public class MovieActivity extends AppCompatActivity implements MovieView {
 
     private static final String TAG = MovieActivity.class.getSimpleName();
+    private MoviePresenter moviePresenter;
+    private String movieID;
 
     @BindView(R.id.movie_activity_movie_pb)
     ProgressBar mProgressBar;
@@ -59,22 +62,33 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     @BindView(R.id.full_screen_error_desc_tv)
     TextView mErrorTextView;
 
-    private MoviePresenter moviePresenter;
+    @BindView(R.id.activity_movie_reviews)
+    CardView mMovieReviews;
+
+    @BindView(R.id.activity_movie_videos)
+    CardView mMovieVideos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
+        // Use BufferKnife to bind views
         ButterKnife.bind(this);
 
-        getSupportActionBar().setTitle("");
+        // Set up action bar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("");
+        }
 
         // Get the Intent that started this activity and extract the movie id string
         Intent intent = getIntent();
-        String movieID = intent.getStringExtra(PostersActivity.MOVIE_ID);
+        movieID = intent.getStringExtra(PostersActivity.MOVIE_ID);
+
+        // Set on click listeners
+        mMovieReviews.setOnClickListener(reviewsClickListener);
+        mMovieVideos.setOnClickListener(videosClickListener);
 
         // Then use that movie id to fetch more movie details from the movie presenter
         moviePresenter = new MoviePresenter(this);
@@ -110,7 +124,7 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         mErrorTextView.setText(R.string.movie_failed_to_load);
         mMovieFailedLayout.setVisibility(View.VISIBLE);
 
-        Toast.makeText(this, "Sorry, could not load movie", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Sorry, Could not load movie", Toast.LENGTH_SHORT).show();
         finish();
     }
 
@@ -173,5 +187,23 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         if (minutes != -1) runtimeBuilder.append(String.valueOf(minutes)).append("m");
         return runtimeBuilder.toString();
     }
+
+    View.OnClickListener reviewsClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getApplicationContext(), MovieReviewsActivity.class);
+            intent.putExtra(PostersActivity.MOVIE_ID, movieID);
+            startActivity(intent);
+        }
+    };
+
+    View.OnClickListener videosClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getApplicationContext(), MovieVideosActivity.class);
+            intent.putExtra(PostersActivity.MOVIE_ID, movieID);
+            startActivity(intent);
+        }
+    };
 
 }

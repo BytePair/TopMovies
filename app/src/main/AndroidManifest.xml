@@ -11,24 +11,47 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".views.PostersActivity"
-            android:launchMode="singleTop"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".views.MovieActivity"
-            android:parentActivityName=".views.PostersActivity">
+            android:parentActivityName=".views.PostersActivity"
+            android:launchMode="singleTop">
             <!-- The meta-data element is needed for versions lower than 4.1 -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bytepair.topmovies.views.PostersActivity" />
         </activity>
+
+        <activity
+            android:name=".views.MovieReviewsActivity"
+            android:parentActivityName=".views.MovieActivity"
+            android:configChanges="orientation|screenSize">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bytepair.topmovies.views.MovieActivity" />
+        </activity>
+
+        <activity
+            android:name=".views.MovieVideosActivity"
+            android:parentActivityName=".views.MovieActivity"
+            android:configChanges="orientation|screenSize">
+            <!-- The meta-data element is needed for versions lower than 4.1 -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bytepair.topmovies.views.MovieActivity" />
+        </activity>
+
     </application>
 
 </manifest>

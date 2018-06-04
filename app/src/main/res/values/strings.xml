@@ -7,11 +7,17 @@
     <string name="top_rated">Top Rated</string>
     <string name="sort_by">Sort By</string>
 
+    <!-- Action Bar -->
+    <string name="videos">Videos</string>
+    <string name="reviews">Reviews</string>
+
     <!-- Error Page -->
-    <string name="sorry">Sorry : (</string>
+    <string name="sorry">Uh oh...</string>
     <string name="generic_load_error">Content failed to load.</string>
     <string name="movie_failed_to_load">Movie failed to load.</string>
     <string name="movies_failed_to_load">Movies failed to load.</string>
+    <string name="movie_reviews_not_found">No Reviews Found</string>
+    <string name="movie_videos_not_found">No Videos Found</string>
 
     <!-- Default text -->
     <string name="default_year">1900</string>
@@ -23,5 +29,7 @@
     <string name="content_desc_movie_poster">movie poster</string>
     <string name="content_desc_movie_backdrop_image">movie backdrop image</string>
     <string name="add_to_favorites">Add to Favorites</string>
+    <string name="review_content_placeholder">Review Content</string>
+    <string name="author_placeholder">Author</string>
 
 </resources>

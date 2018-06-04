@@ -37,8 +37,8 @@ public class MoviesPresenter {
     }
 
     public void initializeMovies(Context context) {
-        mMovies = new ArrayList<>();
         mMoviesView.loadMoviesInProgress();
+        mMovies = new ArrayList<>();
 
         String sortSetting = context.getSharedPreferences(MOVIES_PREFERENCES, Context.MODE_PRIVATE).getString(SORT_BY, null);
         if (sortSetting == null) {
@@ -48,7 +48,6 @@ public class MoviesPresenter {
         loadMoreMovies(sortSetting, 1);
     }
 
-    // TODO: Request more movies on scroll
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
     public void loadMoreMovies(String sortSetting, int page) {

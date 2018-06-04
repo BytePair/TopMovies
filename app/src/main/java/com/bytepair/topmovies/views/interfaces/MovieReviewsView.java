@@ -7,4 +7,5 @@ public interface MovieReviewsView {
     void loadMovieReviewsFailure();
 
     void loadMovieReviewsInProgress();
+
 }
