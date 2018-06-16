@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.bytepair.topmovies.R;
 import com.bytepair.topmovies.views.adapters.MoviesAdapter;
-import com.bytepair.topmovies.models.Movie;
+import com.bytepair.topmovies.models.pojos.Movie;
 import com.bytepair.topmovies.presenters.MoviesPresenter;
 import com.bytepair.topmovies.views.interfaces.MoviesView;
 import com.bytepair.topmovies.views.listeners.EndlessRecyclerViewScrollListener;
@@ -30,9 +30,10 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
 
     private static final String TAG = PostersActivity.class.getSimpleName();
     private static final String MOVIES_PREFERENCES = "movies_preferences";
-    private static final String SORT_BY = "sort_by";
-    private static final String MOST_POPULAR = "most_popular";
-    private static final String HIGHEST_RATED = "highest_rated";
+    public static final String SORT_BY = "sort_by";
+    public static final String MOST_POPULAR = "most_popular";
+    public static final String HIGHEST_RATED = "highest_rated";
+    public static final String FAVORITES = "favorites";
     public static final String MOVIE_ID = "movie_id";
 
     private MoviesPresenter moviesPresenter;
@@ -100,6 +101,9 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
             case R.id.menu_top_rated:
                 saveSortingSetting(HIGHEST_RATED);
                 break;
+            case R.id.menu_favorites:
+                saveSortingSetting(FAVORITES);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -148,6 +152,9 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
                     case HIGHEST_RATED:
                         getSupportActionBar().setTitle(R.string.top_rated);
                         break;
+                    case FAVORITES:
+                        getSupportActionBar().setTitle(R.string.favorites);
+                        break;
                     default:
                         getSupportActionBar().setTitle(R.string.app_name);
                 }
@@ -157,6 +164,7 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
 
     @Override
     public void loadMoviesFailure() {
+        setToolBarTitle();
         moviesRecyclerView.setVisibility(View.INVISIBLE);
         moviesProgressBar.setVisibility(View.INVISIBLE);
         mErrorTextView.setText(R.string.movies_failed_to_load);
@@ -177,7 +185,7 @@ public class PostersActivity extends AppCompatActivity implements MoviesView, Mo
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                moviesPresenter.loadMoreMovies(getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).getString(SORT_BY, null), page);
+                moviesPresenter.loadMoreMovies(getApplicationContext(), getSharedPreferences(MOVIES_PREFERENCES, MODE_PRIVATE).getString(SORT_BY, null), page);
             }
         };
     }

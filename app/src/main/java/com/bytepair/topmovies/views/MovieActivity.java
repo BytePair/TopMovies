@@ -14,14 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bytepair.topmovies.R;
-import com.bytepair.topmovies.models.DetailedMovie;
+import com.bytepair.topmovies.models.pojos.DetailedMovie;
 import com.bytepair.topmovies.presenters.MoviePresenter;
 import com.bytepair.topmovies.views.interfaces.MovieView;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

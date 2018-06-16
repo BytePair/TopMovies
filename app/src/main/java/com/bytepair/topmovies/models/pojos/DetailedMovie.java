@@ -3,9 +3,10 @@
  * http://www.jsonschema2pojo.org/
  */
 
-package com.bytepair.topmovies.models;
+package com.bytepair.topmovies.models.pojos;
 
 import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
 public class DetailedMovie {

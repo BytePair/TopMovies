@@ -3,9 +3,10 @@
     <string name="app_name">Top Movies</string>
 
     <!-- Menu -->
+    <string name="sort_by">Sort By</string>
     <string name="most_popular">Most Popular</string>
     <string name="top_rated">Top Rated</string>
-    <string name="sort_by">Sort By</string>
+    <string name="favorites">Favorites</string>
 
     <!-- Action Bar -->
     <string name="videos">Videos</string>

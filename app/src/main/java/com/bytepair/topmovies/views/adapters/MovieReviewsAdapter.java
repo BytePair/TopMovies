@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bytepair.topmovies.R;
-import com.bytepair.topmovies.models.Review;
+import com.bytepair.topmovies.models.pojos.Review;
 
 import java.util.List;
 

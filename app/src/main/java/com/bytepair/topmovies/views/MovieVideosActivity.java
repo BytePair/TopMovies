@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bytepair.topmovies.R;
-import com.bytepair.topmovies.models.Video;
+import com.bytepair.topmovies.models.pojos.Video;
 import com.bytepair.topmovies.presenters.MovieVideosPresenter;
 import com.bytepair.topmovies.views.adapters.MovieVideosAdapter;
 import com.bytepair.topmovies.views.interfaces.MovieVideosView;

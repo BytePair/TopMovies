@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bytepair.topmovies.R;
-import com.bytepair.topmovies.models.Movie;
+import com.bytepair.topmovies.models.pojos.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

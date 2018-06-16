@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bytepair.topmovies.R;
-import com.bytepair.topmovies.models.Video;
+import com.bytepair.topmovies.models.pojos.Video;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

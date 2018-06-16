@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- Activities -->
         <activity
             android:name=".views.PostersActivity"
             android:configChanges="orientation|screenSize"
@@ -51,6 +52,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bytepair.topmovies.views.MovieActivity" />
         </activity>
+
+        <!-- Provider -->
+        <provider
+            android:name=".utilities.contentproviders.MovieProvider"
+            android:authorities="com.bytepair.topmovies"
+            android:exported="false"
+            android:syncable="true"/>
 
     </application>
 

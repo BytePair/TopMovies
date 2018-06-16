@@ -1,13 +1,19 @@
 package com.bytepair.topmovies.presenters;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.widget.SimpleCursorAdapter;
 
 import com.bytepair.topmovies.BuildConfig;
-import com.bytepair.topmovies.models.Movie;
-import com.bytepair.topmovies.models.MovieResults;
+import com.bytepair.topmovies.models.contracts.MovieContract;
+import com.bytepair.topmovies.models.pojos.Movie;
+import com.bytepair.topmovies.models.pojos.MovieResults;
 import com.bytepair.topmovies.utilities.services.MovieService;
 import com.bytepair.topmovies.views.interfaces.MoviesView;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +23,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.bytepair.topmovies.views.PostersActivity.FAVORITES;
+import static com.bytepair.topmovies.views.PostersActivity.HIGHEST_RATED;
+import static com.bytepair.topmovies.views.PostersActivity.MOST_POPULAR;
+import static com.bytepair.topmovies.views.PostersActivity.SORT_BY;
+
 public class MoviesPresenter {
 
     private static final String MOVIES_PREFERENCES = "movies_preferences";
-    private static final String SORT_BY = "sort_by";
-    private static final String MOST_POPULAR = "most_popular";
-    private static final String HIGHEST_RATED = "highest_rated";
 
     private MoviesView mMoviesView;
     private List<Movie> mMovies;
@@ -45,12 +53,12 @@ public class MoviesPresenter {
             return;
         }
 
-        loadMoreMovies(sortSetting, 1);
+        loadMoreMovies(context, sortSetting, 1);
     }
 
     // Append the next page of data into the adapter
     // This method probably sends out a network request and appends new data items to your adapter.
-    public void loadMoreMovies(String sortSetting, int page) {
+    public void loadMoreMovies(Context context, String sortSetting, int page) {
         // Send an API request to retrieve appropriate paginated data
         switch (sortSetting) {
             case MOST_POPULAR:
@@ -58,6 +66,9 @@ public class MoviesPresenter {
                 break;
             case HIGHEST_RATED:
                 enqueueCallback(MovieService.getAPI().getTopRatedMovies(BuildConfig.MOVIE_API_KEY, page));
+                break;
+            case FAVORITES:
+                fetchLocalFavorites(context);
                 break;
             default:
                 break;
@@ -85,6 +96,33 @@ public class MoviesPresenter {
                 mMoviesView.loadMoviesFailure();
             }
         });
+    }
+
+    private void fetchLocalFavorites(Context context) {
+        ContentResolver resolver = context.getContentResolver();
+        String[] projection = new String[]{MovieContract.MovieEntry._ID, MovieContract.MovieEntry.POSTER_PATH};
+        Cursor cursor = resolver.query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                Movie movie = new Movie();
+                movie.setId(cursor.getInt(0));
+                movie.setPosterPath(cursor.getString(1));
+                mMovies.add(movie);
+            } while (cursor.moveToNext());
+        }
+
+        if (CollectionUtils.isNotEmpty(mMovies)) {
+            mMoviesView.loadMoviesSuccess();
+        } else {
+            mMoviesView.loadMoviesFailure();
+        }
     }
 
 }
