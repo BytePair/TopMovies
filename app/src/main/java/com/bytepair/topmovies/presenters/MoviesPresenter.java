@@ -1,15 +1,15 @@
 package com.bytepair.topmovies.presenters;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.widget.SimpleCursorAdapter;
 
 import com.bytepair.topmovies.BuildConfig;
-import com.bytepair.topmovies.models.contracts.MovieContract;
-import com.bytepair.topmovies.models.pojos.Movie;
-import com.bytepair.topmovies.models.pojos.MovieResults;
+import com.bytepair.topmovies.utilities.contentproviders.MovieContract;
+import com.bytepair.topmovies.models.Movie;
+import com.bytepair.topmovies.models.MovieResults;
+import com.bytepair.topmovies.utilities.contentproviders.FavoriteMovieQueryHandler;
 import com.bytepair.topmovies.utilities.services.MovieService;
 import com.bytepair.topmovies.views.interfaces.MoviesView;
 
@@ -28,7 +28,7 @@ import static com.bytepair.topmovies.views.PostersActivity.HIGHEST_RATED;
 import static com.bytepair.topmovies.views.PostersActivity.MOST_POPULAR;
 import static com.bytepair.topmovies.views.PostersActivity.SORT_BY;
 
-public class MoviesPresenter {
+public class MoviesPresenter implements FavoriteMovieQueryHandler.FavoriteMovieQueryListener {
 
     private static final String MOVIES_PREFERENCES = "movies_preferences";
 
@@ -99,23 +99,33 @@ public class MoviesPresenter {
     }
 
     private void fetchLocalFavorites(Context context) {
-        ContentResolver resolver = context.getContentResolver();
-        String[] projection = new String[]{MovieContract.MovieEntry._ID, MovieContract.MovieEntry.POSTER_PATH};
-        Cursor cursor = resolver.query(
+
+        FavoriteMovieQueryHandler favoriteMovieQueryHandler = new FavoriteMovieQueryHandler(context.getContentResolver(), this);
+
+        String[] projection = new String[] {
+                MovieContract.MovieEntry._ID, MovieContract.MovieEntry.POSTER_PATH
+        };
+
+        favoriteMovieQueryHandler.startQuery(
+                0,
+                null,
                 MovieContract.MovieEntry.CONTENT_URI,
                 projection,
                 null,
                 null,
                 null
         );
+    }
 
-        if (cursor.moveToFirst()) {
-            do {
-                Movie movie = new Movie();
-                movie.setId(cursor.getInt(0));
-                movie.setPosterPath(cursor.getString(1));
-                mMovies.add(movie);
-            } while (cursor.moveToNext());
+    @Override
+    public void onQueryComplete(Cursor cursor) {
+        mMovies = new ArrayList<>();
+
+        while (cursor != null && cursor.moveToNext()) {
+            Movie movie = new Movie();
+            movie.setId(cursor.getInt(0));
+            movie.setPosterPath(cursor.getString(1));
+            mMovies.add(movie);
         }
 
         if (CollectionUtils.isNotEmpty(mMovies)) {
@@ -125,4 +135,13 @@ public class MoviesPresenter {
         }
     }
 
+    @Override
+    public void onInsertComplete(Uri uri) {
+        // do nothing for now, no inserts
+    }
+
+    @Override
+    public void onDeleteComplete(int result) {
+        // no nothing for now, no deletes
+    }
 }

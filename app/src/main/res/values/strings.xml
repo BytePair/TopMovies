@@ -14,11 +14,11 @@
 
     <!-- Error Page -->
     <string name="sorry">Uh oh...</string>
-    <string name="generic_load_error">Content failed to load.</string>
-    <string name="movie_failed_to_load">Movie failed to load.</string>
-    <string name="movies_failed_to_load">Movies failed to load.</string>
-    <string name="movie_reviews_not_found">No Reviews Found</string>
-    <string name="movie_videos_not_found">No Videos Found</string>
+    <string name="generic_load_error">No content found.</string>
+    <string name="movie_failed_to_load">No movies found.</string>
+    <string name="movies_failed_to_load">No movies found.</string>
+    <string name="movie_reviews_not_found">No reviews Found</string>
+    <string name="movie_videos_not_found">No videos Found</string>
 
     <!-- Default text -->
     <string name="default_year">1900</string>

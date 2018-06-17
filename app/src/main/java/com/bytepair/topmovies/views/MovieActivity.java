@@ -1,11 +1,16 @@
 package com.bytepair.topmovies.views;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.view.Menu;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -14,8 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bytepair.topmovies.R;
-import com.bytepair.topmovies.models.pojos.DetailedMovie;
+import com.bytepair.topmovies.utilities.contentproviders.MovieContract;
+import com.bytepair.topmovies.models.DetailedMovie;
 import com.bytepair.topmovies.presenters.MoviePresenter;
+import com.bytepair.topmovies.utilities.contentproviders.FavoriteMovieQueryHandler;
 import com.bytepair.topmovies.views.interfaces.MovieView;
 import com.squareup.picasso.Picasso;
 
@@ -24,11 +31,13 @@ import org.apache.commons.lang3.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MovieActivity extends AppCompatActivity implements MovieView {
+public class MovieActivity extends AppCompatActivity implements  MovieView, FavoriteMovieQueryHandler.FavoriteMovieQueryListener {
 
     private static final String TAG = MovieActivity.class.getSimpleName();
+    private FavoriteMovieQueryHandler favoriteMovieQueryHandler;
     private MoviePresenter moviePresenter;
     private String movieID;
+    private Boolean movieIsFavorite;
 
     @BindView(R.id.movie_activity_movie_pb)
     ProgressBar mProgressBar;
@@ -66,6 +75,9 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
     @BindView(R.id.activity_movie_videos)
     CardView mMovieVideos;
 
+    @BindView(R.id.favorite_fab)
+    FloatingActionButton mFavoriteFAB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,16 +99,15 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         // Set on click listeners
         mMovieReviews.setOnClickListener(reviewsClickListener);
         mMovieVideos.setOnClickListener(videosClickListener);
+        mFavoriteFAB.setOnClickListener(favoriteClickListener);
 
         // Then use that movie id to fetch more movie details from the movie presenter
         moviePresenter = new MoviePresenter(this);
         moviePresenter.fetchMovie(movieID);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_movie_details, menu);
-        return true;
+        // Get the query handler that will be used to query/add/remove favorite status
+        favoriteMovieQueryHandler = new FavoriteMovieQueryHandler(getContentResolver(), this);
+        queryForFavorite();
     }
 
     @Override
@@ -204,4 +215,72 @@ public class MovieActivity extends AppCompatActivity implements MovieView {
         }
     };
 
+    View.OnClickListener favoriteClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (movieIsFavorite) {
+                deleteFavorite();
+            } else {
+                addFavorite();
+            }
+            queryForFavorite();
+        }
+    };
+
+    private void queryForFavorite() {
+        favoriteMovieQueryHandler.startQuery(
+                0,
+                null,
+                MovieContract.MovieEntry.buildMovieUri(Long.valueOf(movieID)),
+                new String[]{MovieContract.MovieEntry._ID, MovieContract.MovieEntry.POSTER_PATH},
+                null,
+                null,
+                null
+        );
+    }
+
+    private void addFavorite() {
+        if (moviePresenter.getDetailedMovie() != null) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MovieContract.MovieEntry._ID, movieID);
+            contentValues.put(MovieContract.MovieEntry.POSTER_PATH, moviePresenter.getDetailedMovie().getPosterPath());
+            favoriteMovieQueryHandler.startInsert(
+                    0,
+                    null,
+                    MovieContract.MovieEntry.CONTENT_URI,
+                    contentValues
+            );
+        }
+    }
+
+    private void deleteFavorite() {
+        favoriteMovieQueryHandler.startDelete(
+                0,
+                null,
+                MovieContract.MovieEntry.CONTENT_URI,
+                MovieContract.MovieEntry._ID + "=?",
+                new String[]{movieID}
+        );
+    }
+
+    @Override
+    public void onQueryComplete(Cursor cursor) {
+        if (cursor != null && cursor.moveToNext()) {
+            mFavoriteFAB.setImageResource(R.drawable.ic_baseline_favorite_24px);
+            movieIsFavorite = true;
+        } else {
+            mFavoriteFAB.setImageResource(R.drawable.ic_baseline_favorite_border_24px);
+            movieIsFavorite = false;
+        }
+    }
+
+    @Override
+    public void onInsertComplete(Uri uri) {
+        Log.i(TAG, "Added movie to favorites: " + ContentUris.parseId(uri));
+    }
+
+    @Override
+    public void onDeleteComplete(int result) {
+        Log.i(TAG, "Deleted " + result + " movie(s) from favorites");
+    }
 }

@@ -15,8 +15,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.bytepair.topmovies.models.contracts.MovieContract;
-
 public class MovieProvider extends ContentProvider {
 
     // Use an int for each URI we will run, this represents the different queries
@@ -114,7 +112,9 @@ public class MovieProvider extends ContentProvider {
         // causes the cursor to register a content observer to watch for changes that happen to
         // this URI and any of it's descendants. By descendants, we mean any URI that begins
         // with this path.
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        if (getContext() != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         return cursor;
     }
 
@@ -140,7 +140,9 @@ public class MovieProvider extends ContentProvider {
         }
 
         // Use this on the URI passed into the function to notify any observers that the uri has changed.
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return returnUri;
     }
 
@@ -159,7 +161,7 @@ public class MovieProvider extends ContentProvider {
         }
 
         // Because null could delete all rows:
-        if (selection == null || rowsDeleted != 0){
+        if ((selection == null || rowsDeleted != 0) && getContext() != null) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
@@ -180,7 +182,7 @@ public class MovieProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown Uri: " + uri);
         }
 
-        if(rowsUpdated != 0){
+        if (rowsUpdated != 0 && getContext() != null) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 

@@ -5,10 +5,10 @@
 
 package com.bytepair.topmovies.utilities.services;
 
-import com.bytepair.topmovies.models.pojos.DetailedMovie;
-import com.bytepair.topmovies.models.pojos.MovieResults;
-import com.bytepair.topmovies.models.pojos.ReviewResults;
-import com.bytepair.topmovies.models.pojos.VideoResults;
+import com.bytepair.topmovies.models.DetailedMovie;
+import com.bytepair.topmovies.models.MovieResults;
+import com.bytepair.topmovies.models.ReviewResults;
+import com.bytepair.topmovies.models.VideoResults;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -3,23 +3,23 @@
  * http://www.jsonschema2pojo.org/
  */
 
-package com.bytepair.topmovies.models.pojos;
+package com.bytepair.topmovies.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SpokenLanguage {
+public class Genre {
 
-    @SerializedName("iso_639_1")
-    private String iso6391;
+    @SerializedName("id")
+    private int id;
     @SerializedName("name")
     private String name;
 
-    public String getIso6391() {
-        return iso6391;
+    public int getId() {
+        return id;
     }
 
-    public void setIso6391(String iso6391) {
-        this.iso6391 = iso6391;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -3,8 +3,8 @@ package com.bytepair.topmovies.presenters;
 import android.support.annotation.NonNull;
 
 import com.bytepair.topmovies.BuildConfig;
-import com.bytepair.topmovies.models.pojos.Review;
-import com.bytepair.topmovies.models.pojos.ReviewResults;
+import com.bytepair.topmovies.models.Review;
+import com.bytepair.topmovies.models.ReviewResults;
 import com.bytepair.topmovies.utilities.services.MovieService;
 import com.bytepair.topmovies.views.interfaces.MovieReviewsView;
 

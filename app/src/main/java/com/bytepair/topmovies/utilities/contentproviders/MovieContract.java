@@ -3,7 +3,7 @@
  * for implementing content provider.
  */
 
-package com.bytepair.topmovies.models.contracts;
+package com.bytepair.topmovies.utilities.contentproviders;
 
 import android.content.ContentUris;
 import android.net.Uri;
@@ -49,11 +49,11 @@ public final class MovieContract implements BaseColumns {
         public static final String TABLE_NAME = "favoriteMoviesTable";
         public static final String POSTER_PATH = "moviePosterPath";
 
-
         // Define a function to build a URI to find a specific movie by it's identifier
         public static Uri buildMovieUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
     }
 
 }
